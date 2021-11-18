@@ -321,7 +321,7 @@ char MorseToChar(char morse[]) {
     char result = '\n';
     for (int i = 0; i < 26; i++) {
         for (int j = 0; j < 4; j++) {
-            if (morseAlphabet[i][j] != morse[0]) {
+            if (morseAlphabet[i][j] != morse[j]) {
                 break;
             }
             result = i + 65;
