@@ -55,7 +55,89 @@ int main(void)
     // (depending on which of the #define statements at the top of this file has been uncommented)
 
 #ifdef PRESS_TIME
+
+    char morseAlphabet[26][4];
+
+    //A
+    char morseAlphabet[0] = {'.', '-'};
+
+    //B
+    char morseAlphabet[1] = {'-', '.', '.', '.'};
+
+    //C
+    char morseAlphabet[2] = {'-', '.', '-', '.'};
+
+    //D
+    char morseAlphabet[3] = {'-', '.', '.'};
+
+    //E
+    char morseAlphabet[4] = {'.'};
+
+    //F
+    char morseAlphabet[5] = {'.', '.', '-', '.'};
+
+    //G
+    char morseAlphabet[6] = {'-'. '-', '.'};
+
+    //H
+    char morseAlphabet[7] = {'.', '.', '.', '.'};
+
+    //I
+    char morseAlphabet[8] = {'.', '.'};
+
+    //J
+    char morseAlphabet[9] = {'.', '-', '-', '-'};
+
+    //K
+    char morseAlphabet[10] = {'-', '.', '-'};
+
+    //L
+    char morseAlphabet[11] = {'.', '-', '.', '.'};
+
+    //M
+    char morseAlphabet[12] = {'-', '-'};
+
+    //N
+    char morseAlphabet[13] = {'-', '.'};
+
+    //O
+    char morseAlphabet[14] = {'-', '-', '-'};
+
+    //P
+    char morseAlphabet[15] = {'.', '-', '-', '.'};
+
+    //Q
+    char morseAlphabet[16] = {'-', '-', '.', '-'};
+
+    //R
+    char morseAlphabet[17] = {'.', '-', '.'};
+
+    //S
+    char morseAlphabet[18] = {'.', '.', '.'};
+
+    //T
+    char morseAlphabet[19] = {'-'};
+
+    //U
+    char morseAlphabet[20] = {'.', '.', '-'};
+
+    //V
+    char morseAlphabet[21] = {'.', '.', '.', '-'};
+
+    //W
+    char morseAlphabet[22] = {'.', '-', '-'};
+
+    //X
+    char morseAlphabet[23] = {'-', '.', '.', '-'};
+
+    //Y
+    char morseAlphabet[24] = {'-', '.', '-', '-'};
+
+    //Z
+    char morseAlphabet[25] = {'-', '-', '.', '.'};
+
     while (true) {
+
         while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)); // Waiting for button press
 
         char inputChar = ' ';
