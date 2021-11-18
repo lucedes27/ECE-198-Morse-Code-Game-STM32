@@ -58,18 +58,38 @@ int main(void)
     while (true) {
         while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)); // Waiting for button press
 
+        char inputChar = ' ';
+
         char buff[100];
         uint32_t time1 = HAL_GetTick(); 
 
         while (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)); // Waiting for button to be released
 
         uint32_t time2 = HAL_GetTick();
-        uint32_t difference = time2 - time1; // Calculating time button is held for
+        uint32_t timePressed = time2 - time1; // Calculating time button is held for
 
-        sprintf(buff, "Time Pressed: %lu ms\r\n", difference);
-        SerialPuts(buff); // Outputing press time
+        if(timePressed < 200){
+            inputChar = '.';
+        } else{
+            inputChar = '-';
+        }
+
+        sprintf(buff, "Time Pressed: %lu ms\r\n", timePressed);
+        SerialPuts(buff);
+        sprintf(buff, "Input character: %c \r\n\n", inputChar);
+        SerialPuts(buff);
+        // Outputing press time
+
+        // SerialPuts(inputChar);
+
+
+
+        //Checking for dot vs dash
+
     }
 #endif
+
+
 
 #ifdef BUTTON_BLINK
     // Wait for the user to push the blue button, then blink the LED.
