@@ -8,7 +8,9 @@
 // To run a particular example, you should remove the comment (//) in
 // front of exactly ONE of the following lines:
 
-#define BUTTON_BLINK
+#define PRESS_TIME
+
+// #define BUTTON_BLINK
 // #define LIGHT_SCHEDULER
 // #define TIME_RAND
 // #define KEYPAD
@@ -52,6 +54,23 @@ int main(void)
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
 
+#ifdef PRESS_TIME
+    while (true) {
+        while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)); // Waiting for button press
+
+        char buff[100];
+        uint32_t time1 = HAL_GetTick(); 
+
+        while (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)); // Waiting for button to be released
+
+        uint32_t time2 = HAL_GetTick();
+        uint32_t difference = time2 - time1; // Calculating time button is held for
+
+        sprintf(buff, "Time Pressed: %lu ms\r\n", difference);
+        SerialPuts(buff); // Outputing press time
+    }
+#endif
+
 #ifdef BUTTON_BLINK
     // Wait for the user to push the blue button, then blink the LED.
 
@@ -86,8 +105,8 @@ int main(void)
     // Note that you must have "#include <stdlib.h>"" at the top of your main.c
     // in order to use the srand() and random() functions.
 
-    // while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));  // wait for button press
-    // srand(HAL_GetTick());  // set the random seed to be the time in ms that it took to press the button
+    while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));  // wait for button press
+    srand(HAL_GetTick());  // set the random seed to be the time in ms that it took to press the button
     // if the line above is commented out, your program will get the same sequence of random numbers
     // every time you run it (which may be useful in some cases)
 
@@ -104,7 +123,7 @@ int main(void)
         // lu == "long unsigned", ld = "long decimal", where "long" is 32 bit and "decimal" implies signed
         SerialPuts(buff); // transmit the buffer to the host computer's serial monitor in VSCode/PlatformIO
 
-        while (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));  // wait for button to be released
+        while (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)); // wait for button to be released
     }
 #endif
 
