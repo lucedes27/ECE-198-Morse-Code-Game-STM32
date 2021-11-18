@@ -28,6 +28,10 @@
 
 #include "ece198.h"
 
+int main(void);
+
+char MorseToChar(char morse[]);
+
 int main(void)
 {
     HAL_Init(); // initialize the Hardware Abstraction Layer
@@ -393,4 +397,18 @@ void SysTick_Handler(void)
 {
     HAL_IncTick(); // tell HAL that a new tick has happened
     // we can do other things in here too if we need to, but be careful
+}
+
+char MorseToChar(char morse[]) {
+    char result = '\n';
+    for (int i = 0; i < 26; i++) {
+        for (int j = 0; j < 4; j++) {
+            if (morseAlphabet[i][j] != morse[j]) {
+                break;
+            }
+            result = i + 65;
+            return result;
+        }
+    }
+    return result;
 }
