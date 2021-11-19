@@ -230,14 +230,14 @@ void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]){
       letterIndex = morse[i] - 65;
       for(size_t j = 0; j < 4; j++){
         if(morseAlphabet[letterIndex][j] != '\0'){
-          if(morseAlphabet[letterIndex][j] = '.') {
+          if(morseAlphabet[letterIndex][j] == '.') {
             HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
             HAL_Delay(200);
             HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
             HAL_Delay(1400);
         }
 
-        	if(morseAlphabet[letterIndex][j] = '-'){
+        	if(morseAlphabet[letterIndex][j] == '-'){
             HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
             HAL_Delay(600);
             HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
@@ -250,6 +250,6 @@ void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]){
 
     }
 
-    delay(1400);
+    HAL_Delay(1400);
 
 }
