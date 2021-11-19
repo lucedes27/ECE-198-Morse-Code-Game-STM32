@@ -89,8 +89,6 @@ int main(void)
         //Outputting inputChar
         sprintf(buff, "Input character: %c \r\n\n", inputChar);
         SerialPuts(buff);
-<<<<<<< HEAD
-=======
         // Outputing press time
 
         // SerialPuts(inputChar);
@@ -102,7 +100,6 @@ int main(void)
         } else {
             SerialPuts("Invalid\r\n");
         }
->>>>>>> ec67ab142889a1770787e3f24166185d2da494e2
 
         
 
