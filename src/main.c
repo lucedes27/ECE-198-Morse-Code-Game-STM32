@@ -74,6 +74,8 @@ int main(void)
 
 
 
+
+
         //Checking for dot vs dash
 
     }
@@ -89,87 +91,88 @@ void SysTick_Handler(void)
 }
 
 char MorseToChar(char morse[]) {
-    char morseAlphabet[26][4];
+    char morseAlphabet[26][4] = {
+        //A
+        {'.', '-'},
 
-    //A
-    char morseAlphabet[0] = {'.', '-'};
+        //B
+        {'-', '.', '.', '.'},
 
-    //B
-    char morseAlphabet[1] = {'-', '.', '.', '.'};
+        //C
+        {'-', '.', '-', '.'},
 
-    //C
-    char morseAlphabet[2] = {'-', '.', '-', '.'};
+        //D
+        {'-', '.', '.'},
 
-    //D
-    char morseAlphabet[3] = {'-', '.', '.'};
+        //E
+        {'.'},
 
-    //E
-    char morseAlphabet[4] = {'.'};
+        //F
+        {'.', '.', '-', '.'},
 
-    //F
-    char morseAlphabet[5] = {'.', '.', '-', '.'};
+        //G
+        {'-', '-', '.'},
 
-    //G
-    char morseAlphabet[6] = {'-', '-', '.'};
+        //H
+        {'.', '.', '.', '.'},
 
-    //H
-    char morseAlphabet[7] = {'.', '.', '.', '.'};
+        //I
+        {'.', '.'},
 
-    //I
-    char morseAlphabet[8] = {'.', '.'};
+        //J
+        {'.', '-', '-', '-'},
 
-    //J
-    char morseAlphabet[9] = {'.', '-', '-', '-'};
+        //K
+        {'-', '.', '-'},
 
-    //K
-    char morseAlphabet[10] = {'-', '.', '-'};
+        //L
+        {'.', '-', '.', '.'},
 
-    //L
-    char morseAlphabet[11] = {'.', '-', '.', '.'};
+        //M
+        {'-', '-'},
 
-    //M
-    char morseAlphabet[12] = {'-', '-'};
+        //N
+        {'-', '.'},
 
-    //N
-    char morseAlphabet[13] = {'-', '.'};
+        //O
+        {'-', '-', '-'},
 
-    //O
-    char morseAlphabet[14] = {'-', '-', '-'};
+        //P
+        {'.', '-', '-', '.'},
 
-    //P
-    char morseAlphabet[15] = {'.', '-', '-', '.'};
+        //Q
+        {'-', '-', '.', '-'},
 
-    //Q
-    char morseAlphabet[16] = {'-', '-', '.', '-'};
+        //R
+        {'.', '-', '.'},
 
-    //R
-    char morseAlphabet[17] = {'.', '-', '.'};
+        //S
+        {'.', '.', '.'},
 
-    //S
-    char morseAlphabet[18] = {'.', '.', '.'};
+        //T
+        {'-'},
 
-    //T
-    char morseAlphabet[19] = {'-'};
+        //U
+        {'.', '.', '-'},
 
-    //U
-    char morseAlphabet[20] = {'.', '.', '-'};
+        //V
+        {'.', '.', '.', '-'},
 
-    //V
-    char morseAlphabet[21] = {'.', '.', '.', '-'};
+        //W
+        {'.', '-', '-'},
 
-    //W
-    char morseAlphabet[22] = {'.', '-', '-'};
+        //X
+        {'-', '.', '.', '-'},
 
-    //X
-    char morseAlphabet[23] = {'-', '.', '.', '-'};
+        //Y
+        {'-', '.', '-', '-'},
 
-    //Y
-    char morseAlphabet[24] = {'-', '.', '-', '-'};
+        //Z
+        {'-', '-', '.', '.'}
 
-    //Z
-    char morseAlphabet[25] = {'-', '-', '.', '.'};
+    };
 
-    char result = '\n';
+    char result = '\0';
     for (int i = 0; i < 26; i++) {
         for (int j = 0; j < 4; j++) {
             if (morseAlphabet[i][j] != morse[j]) {
