@@ -18,7 +18,9 @@
 
 int main(void);
 
-char MorseToChar(char morse[]);
+char MorseToChar(char morse[], char morseAlphabet[][4]);
+
+void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]);
 
 int main(void)
 {
@@ -55,78 +57,8 @@ int main(void)
     int userCounter = 0;
 
     char buff[100];
-
-    while (true) {
-
-        int timeSincePressed = (INT_MIN/2);
-
-        while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)){
-
-            timeSincePressed = HAL_GetTick() - time2;
-
-            if(considerSpace && (timeSincePressed > 1400)){
-                SerialPuts("Space");
-                considerSpace = false;
-
-                if(MorseToChar(userInput) != '\0'){
-                
-                    sprintf(buff, "Letter: %c\r\n", MorseToChar(userInput));
-                    SerialPuts(buff);
-
-                    SerialPuts("Running MorseToChar");
-                }
-
-                for (int i = 0; i < 4; i++) {
-                    userInput[i] = '\0';
-                    userCounter = 0;
-                }
-            }
-
-        } // Waiting for button press
-
-        
-        uint32_t time1 = HAL_GetTick(); 
-
-        while (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)); // Waiting for button to be released
-
-        time2 = HAL_GetTick();
-        uint32_t timePressed = time2 - time1; // Calculating time button is held for
-
-        if(timePressed < 200){
-            inputChar = '.';
-        } else{
-            inputChar = '-';
-        }
-
-        userInput[userCounter] = inputChar;
-        userCounter++;
-        considerSpace = true;
-
-        // Outputing press time
-        sprintf(buff, "Time Pressed: %lu ms\r\n", timePressed);
-        SerialPuts(buff);
-        //Outputting inputChar
-        sprintf(buff, "Input character: %c \r\n\n", inputChar);
-        SerialPuts(buff);        
-
-
-
-        //Checking for dot vs dash
-
-    }
-
-    return 0;
-}
-
-// This function is called by the HAL once every millisecond
-void SysTick_Handler(void)
-{
-    HAL_IncTick(); // tell HAL that a new tick has happened
-    // we can do other things in here too if we need to, but be careful
-}
-
-char MorseToChar(char morse[]) {
-    char morseAlphabet[26][4] = {
+  
+  char morseAlphabet[26][4] = {
         //A
         {'.', '-'},
 
@@ -207,6 +139,79 @@ char MorseToChar(char morse[]) {
 
     };
 
+    while (true) {
+
+        
+
+        int timeSincePressed = (INT_MIN/2);
+
+        while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)){
+
+            timeSincePressed = HAL_GetTick() - time2;
+
+            if(considerSpace && (timeSincePressed > 1400)){
+                SerialPuts("Space");
+                considerSpace = false;
+
+                if(MorseToChar(userInput, morseAlphabet) != '\0'){
+                
+                    sprintf(buff, "Letter: %c\r\n", MorseToChar(userInput, morseAlphabet));
+                    SerialPuts(buff);
+
+                    SerialPuts("Running MorseToChar");
+                }
+
+                for (int i = 0; i < 4; i++) {
+                    userInput[i] = '\0';
+                    userCounter = 0;
+                }
+            }
+
+        } // Waiting for button press
+
+        
+        uint32_t time1 = HAL_GetTick(); 
+
+        while (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)); // Waiting for button to be released
+
+        time2 = HAL_GetTick();
+        uint32_t timePressed = time2 - time1; // Calculating time button is held for
+
+        if(timePressed < 200){
+            inputChar = '.';
+        } else{
+            inputChar = '-';
+        }
+
+        userInput[userCounter] = inputChar;
+        userCounter++;
+        considerSpace = true;
+
+        // Outputing press time
+        sprintf(buff, "Time Pressed: %lu ms\r\n", timePressed);
+        SerialPuts(buff);
+        //Outputting inputChar
+        sprintf(buff, "Input character: %c \r\n\n", inputChar);
+        SerialPuts(buff);        
+
+
+
+        //Checking for dot vs dash
+
+    }
+
+    return 0;
+}
+
+// This function is called by the HAL once every millisecond
+void SysTick_Handler(void)
+{
+    HAL_IncTick(); // tell HAL that a new tick has happened
+    // we can do other things in here too if we need to, but be careful
+}
+
+char MorseToChar(char morse[], char morseAlphabet[][4]) {
+
     for (int i = 0; i < 26; i++) {
         if ((morseAlphabet[i][0] == morse[0]) && (morseAlphabet[i][1] == morse[1]) && (morseAlphabet[i][2] == morse[2]) && (morseAlphabet[i][3] == morse[3])) {
             return i + 65;
@@ -216,4 +221,35 @@ char MorseToChar(char morse[]) {
 
     SerialPuts("Invalid\r\n");
     return '\0';
+}
+
+void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]){
+	size_t letterIndex = 0;
+  
+  	for(size_t i = 0; i < capacity; i++){
+      letterIndex = morse[i] - 65;
+      for(size_t j = 0; j < 4; j++){
+        if(morseAlphabet[letterIndex][j] != '\0'){
+          if(morseAlphabet[letterIndex][j] == '.') {
+            HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+            HAL_Delay(200);
+            HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+            HAL_Delay(1400);
+        }
+
+        	if(morseAlphabet[letterIndex][j] == '-'){
+            HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+            HAL_Delay(600);
+            HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+            HAL_Delay(1400);
+        }  
+      	}
+        
+
+    }
+
+    }
+
+    HAL_Delay(1400);
+
 }
