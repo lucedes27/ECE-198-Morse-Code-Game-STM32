@@ -12,6 +12,8 @@
 #include <stdio.h>   // sprintf() function
 #include <stdlib.h>  // srand() and random() functions
 
+#include <limits.h>
+
 #include "ece198.h"
 
 int main(void);
@@ -44,18 +46,32 @@ int main(void)
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
 
+    uint32_t time2 = (INT_MIN/2) - 1;
+
     while (true) {
 
-        while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)); // Waiting for button press
+        int timeSincePressed = (INT_MIN/2);
+
+        while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)){
+
+            timeSincePressed = HAL_GetTick() - time2;
+
+            if(timeSincePressed > 1400){
+                SerialPuts("Space");
+            }
+
+        } // Waiting for button press
 
         char inputChar = ' ';
+        char userInput[4];
+        int userCounter = 0;
 
         char buff[100];
         uint32_t time1 = HAL_GetTick(); 
 
         while (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)); // Waiting for button to be released
 
-        uint32_t time2 = HAL_GetTick();
+        time2 = HAL_GetTick();
         uint32_t timePressed = time2 - time1; // Calculating time button is held for
 
         if(timePressed < 200){
@@ -64,15 +80,17 @@ int main(void)
             inputChar = '-';
         }
 
+        userInput[userCounter] = inputChar;
+        userCounter++;
+
+        // Outputing press time
         sprintf(buff, "Time Pressed: %lu ms\r\n", timePressed);
         SerialPuts(buff);
+        //Outputting inputChar
         sprintf(buff, "Input character: %c \r\n\n", inputChar);
         SerialPuts(buff);
-        // Outputing press time
 
-        // SerialPuts(inputChar);
-
-
+        
 
 
 
