@@ -75,6 +75,11 @@ int main(void)
 
                     SerialPuts("Running MorseToChar");
                 }
+
+                for (int i = 0; i < 4; i++) {
+                    userInput[i] = '\0';
+                    userCounter = 0;
+                }
             }
 
         } // Waiting for button press
