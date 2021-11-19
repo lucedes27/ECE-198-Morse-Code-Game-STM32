@@ -48,6 +48,14 @@ int main(void)
 
     uint32_t time2 = (INT_MIN/2) - 1;
 
+    bool considerSpace = false;
+
+    char userInput[4] = {'\0', '\0', '\0', '\0'};
+    char inputChar = ' ';
+    int userCounter = 0;
+
+    char buff[100];
+
     while (true) {
 
         int timeSincePressed = (INT_MIN/2);
@@ -56,17 +64,22 @@ int main(void)
 
             timeSincePressed = HAL_GetTick() - time2;
 
-            if(timeSincePressed > 1400){
+            if(considerSpace && (timeSincePressed > 1400)){
                 SerialPuts("Space");
+                considerSpace = false;
+
+                if(MorseToChar(userInput) != '\0'){
+                
+                    sprintf(buff, "Letter: %c\r\n", MorseToChar(userInput));
+                    SerialPuts(buff);
+
+                    SerialPuts("Running MorseToChar");
+                }
             }
 
-        } // Waiting for button presskea
+        } // Waiting for button press
 
-        char inputChar = ' ';
-        char userInput[4];
-        int userCounter = 0;
-
-        char buff[100];
+        
         uint32_t time1 = HAL_GetTick(); 
 
         while (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)); // Waiting for button to be released
@@ -82,26 +95,14 @@ int main(void)
 
         userInput[userCounter] = inputChar;
         userCounter++;
+        considerSpace = true;
 
         // Outputing press time
         sprintf(buff, "Time Pressed: %lu ms\r\n", timePressed);
         SerialPuts(buff);
         //Outputting inputChar
         sprintf(buff, "Input character: %c \r\n\n", inputChar);
-        SerialPuts(buff);
-        // Outputing press time
-
-        // SerialPuts(inputChar);
-        char test[4] = {'.', '-', '-', '.'};
-        char letter = MorseToChar(test);
-        if (letter != '\0') {
-            sprintf(buff, "Letter: %c\r\n", letter);
-            SerialPuts(buff);
-        } else {
-            SerialPuts("Invalid\r\n");
-        }
-
-        
+        SerialPuts(buff);        
 
 
 
@@ -204,7 +205,10 @@ char MorseToChar(char morse[]) {
     for (int i = 0; i < 26; i++) {
         if ((morseAlphabet[i][0] == morse[0]) && (morseAlphabet[i][1] == morse[1]) && (morseAlphabet[i][2] == morse[2]) && (morseAlphabet[i][3] == morse[3])) {
             return i + 65;
+            SerialPuts("Match found\r\n");
         }
     }
+
+    SerialPuts("Invalid\r\n");
     return '\0';
 }
