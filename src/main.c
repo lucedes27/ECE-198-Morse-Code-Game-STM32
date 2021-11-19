@@ -60,7 +60,7 @@ int main(void)
                 SerialPuts("Space");
             }
 
-        } // Waiting for button press
+        } // Waiting for button presskea
 
         char inputChar = ' ';
         char userInput[4];
@@ -89,6 +89,20 @@ int main(void)
         //Outputting inputChar
         sprintf(buff, "Input character: %c \r\n\n", inputChar);
         SerialPuts(buff);
+<<<<<<< HEAD
+=======
+        // Outputing press time
+
+        // SerialPuts(inputChar);
+        char test[4] = {'.', '-', '-', '.'};
+        char letter = MorseToChar(test);
+        if (letter != '\0') {
+            sprintf(buff, "Letter: %c\r\n", letter);
+            SerialPuts(buff);
+        } else {
+            SerialPuts("Invalid\r\n");
+        }
+>>>>>>> ec67ab142889a1770787e3f24166185d2da494e2
 
         
 
@@ -190,15 +204,10 @@ char MorseToChar(char morse[]) {
 
     };
 
-    char result = '\0';
     for (int i = 0; i < 26; i++) {
-        for (int j = 0; j < 4; j++) {
-            if (morseAlphabet[i][j] != morse[j]) {
-                break;
-            }
-            result = i + 65;
-            return result;
+        if ((morseAlphabet[i][0] == morse[0]) && (morseAlphabet[i][1] == morse[1]) && (morseAlphabet[i][2] == morse[2]) && (morseAlphabet[i][3] == morse[3])) {
+            return i + 65;
         }
     }
-    return result;
+    return '\0';
 }
