@@ -56,9 +56,6 @@ int main(void)
     bool considerSpace = false;
 
     char userInput[4] = {'\0', '\0', '\0', '\0'};
-    for (int i = 0; i < 100; i++) {
-        userInput[i] = '\0';
-    }
     char inputChar = ' ';
     int userCounter = 0;
 
@@ -257,7 +254,7 @@ void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]){
                     HAL_Delay(1400);
                 }
                 if(morseAlphabet[letterIndex][j] == '-'){
-                    AL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+                    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
                     HAL_Delay(600);
                     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
                     HAL_Delay(1400);
