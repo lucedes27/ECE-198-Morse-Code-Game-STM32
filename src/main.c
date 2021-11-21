@@ -57,6 +57,11 @@ int main(void)
     char inputChar = ' ';
     int userCounter = 0;
 
+    char cityInput[85];
+    size_t cityIndex = 0;
+
+    char BERLIN[7] = {'B', 'E', 'R', 'L', 'I', 'N', '\0'};
+
     char buff[100];
   
   char morseAlphabet[26][4] = {
@@ -161,7 +166,16 @@ int main(void)
                     sprintf(buff, "Letter: %c\r\n", MorseToChar(userInput, morseAlphabet));
                     SerialPuts(buff);
 
-                    SerialPuts("Running MorseToChar");
+                    cityInput[cityIndex] = MorseToChar(userInput, morseAlphabet);
+                    cityIndex++;
+
+                    for(size_t i = 0; i < 8; i++){
+                        if(cityInput[i] != BERLIN[i]){
+                            break;
+                        }
+                        SerialPuts("Congrats! You saved Europe!");
+                    }
+
                 }
 
                 for (int i = 0; i < 4; i++) {
