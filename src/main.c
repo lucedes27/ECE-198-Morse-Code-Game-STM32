@@ -144,11 +144,11 @@ int main(void)
 
     while (true) {
 
-        int timeSincePressed = (INT_MIN/2);
+        int timeSincePressed = 0;
 
         while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)){
           
-          	outputMorse(SOS, 3, morseAlphabet);
+          	//outputMorse(SOS, 3, morseAlphabet);
 
             timeSincePressed = HAL_GetTick() - time2;
 
