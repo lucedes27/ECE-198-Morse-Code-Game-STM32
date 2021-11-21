@@ -276,3 +276,13 @@ bool isEqual(char str1[], char str2[]) {
     }
     return str2[i] == '\0';
 }
+
+bool delayedToggle(int delay, GPIO_TypeDef *port, uint16_t pin){
+
+    uint32_t endTime = HAL_GetTick() + delay;
+
+    while(HAL_GetTick() < endTime);
+
+    HAL_GPIO_TogglePin(port, pin);
+
+}
