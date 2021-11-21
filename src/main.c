@@ -144,7 +144,7 @@ int main(void)
 
     while (true) {
 
-        int timeSincePressed = (INT_MIN/2);
+        int timeSincePressed = 0;
 
         while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)){
           
@@ -228,29 +228,27 @@ char MorseToChar(char morse[], char morseAlphabet[][4]) {
 
 void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]){
 	size_t letterIndex = 0;
-  
-  	for(size_t i = 0; i < capacity; i++){
-      letterIndex = morse[i] - 65;
-      for(size_t j = 0; j < 4; j++){
-        if(morseAlphabet[letterIndex][j] != '\0'){
-          if(morseAlphabet[letterIndex][j] == '.') {
-            HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-            HAL_Delay(200);
-            HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-            HAL_Delay(1400);
+    uint32_t initialTime = 0;
+    uint32_t finalTime = 0;
+    for(size_t i = 0; i < capacity; i++){
+        letterIndex = morse[i] - 65;
+        for(size_t j = 0; j < 4; j++){
+            if(morseAlphabet[letterIndex][j] != '\0'){
+                if(morseAlphabet[letterIndex][j] == '.') {
+                    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+                    HAL_Delay(200);
+                    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+                    HAL_Delay(1400);
+                }
+                if(morseAlphabet[letterIndex][j] == '-'){
+                    AL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+                    HAL_Delay(600);
+                    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+                    HAL_Delay(1400);
+                }  
+            }
+
         }
-
-        	if(morseAlphabet[letterIndex][j] == '-'){
-            HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-            HAL_Delay(600);
-            HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-            HAL_Delay(1400);
-        }  
-      	}
-        
-
-    }
-
     }
 
     HAL_Delay(5000);
