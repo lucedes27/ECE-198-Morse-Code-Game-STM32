@@ -160,7 +160,7 @@ int main(void)
             timeSincePressed = HAL_GetTick() - time2;
 
             if(considerSpace && (timeSincePressed > 1400)){
-                SerialPuts("Space");
+                SerialPuts("Space\r\n");
                 considerSpace = false;
 
                 if(MorseToChar(userInput, morseAlphabet) != '\0'){
