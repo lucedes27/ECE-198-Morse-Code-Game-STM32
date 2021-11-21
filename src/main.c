@@ -22,6 +22,8 @@ char MorseToChar(char morse[], char morseAlphabet[][4]);
 
 void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]);
 
+bool isEqual(char str1[], char str2[]);
+
 int main(void)
 {
 
@@ -54,6 +56,9 @@ int main(void)
     bool considerSpace = false;
 
     char userInput[4] = {'\0', '\0', '\0', '\0'};
+    for (int i = 0; i < 100; i++) {
+        userInput[i] = '\0';
+    }
     char inputChar = ' ';
     int userCounter = 0;
 
@@ -169,11 +174,8 @@ int main(void)
                     cityInput[cityIndex] = MorseToChar(userInput, morseAlphabet);
                     cityIndex++;
 
-                    for(size_t i = 0; i < 8; i++){
-                        if(cityInput[i] != BERLIN[i]){
-                            break;
-                        }
-                        SerialPuts("Congrats! You saved Europe!");
+                    if (isEqual(cityInput, BERLIN)) {
+                        SerialPuts("You saved Europe!");
                     }
 
                 }
@@ -267,4 +269,15 @@ void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]){
 
     HAL_Delay(5000);
 
+}
+
+bool isEqual(char str1[], char str2[]) {
+    int i = 0;
+    while (str1[i] != '\0') {
+        if (str1[i] != str2[i]) {
+            return 0;
+        }
+        i++;
+    }
+    return str2[i] == '\0';
 }
