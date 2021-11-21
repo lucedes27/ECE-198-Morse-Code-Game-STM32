@@ -24,6 +24,7 @@ void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]);
 
 int main(void)
 {
+
     HAL_Init(); // initialize the Hardware Abstraction Layer
 
     // Peripherals (including GPIOs) are disabled by default to save power, so we
@@ -139,13 +140,15 @@ int main(void)
 
     };
 
-    while (true) {
+    char SOS[3] = {'S', 'O', 'S'};
 
-        
+    while (true) {
 
         int timeSincePressed = (INT_MIN/2);
 
         while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)){
+          
+          	outputMorse(SOS, 3, morseAlphabet);
 
             timeSincePressed = HAL_GetTick() - time2;
 
@@ -250,6 +253,6 @@ void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]){
 
     }
 
-    HAL_Delay(1400);
+    HAL_Delay(5000);
 
 }
