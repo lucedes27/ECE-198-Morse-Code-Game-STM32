@@ -175,7 +175,8 @@ int main(void)
                     cityInput[cityIndex] = MorseToChar(userInput, morseAlphabet);
                     cityIndex++;
 
-                    SerialPuts("\r\n");
+                    sprintf(buff, "\r\n");
+                    SerialPuts(buff);
                     for(size_t i = 0; i < cityIndex; i++){
                         
                         if(cityInput[i] != '\0'){
@@ -190,6 +191,16 @@ int main(void)
                         SerialPuts(buff);
                     }
 
+                } else{
+                    sprintf(buff, "\r\n");
+                    SerialPuts(buff);
+                    for(size_t i = 0; i < cityIndex; i++){
+                        if(cityInput[i] != '\0'){
+                            sprintf(buff, "%c", cityInput[i]);
+                            SerialPuts(buff);
+                        }
+
+                    }
                 }
 
                 for (int i = 0; i < 4; i++) {
@@ -217,7 +228,7 @@ int main(void)
             
             cityIndex--;
             cityInput[cityIndex] = '\0';
-            
+
             for(size_t i = 0; i < cityIndex; i++){
 
                 if(cityInput[i] != '\0'){
@@ -228,7 +239,7 @@ int main(void)
             }
         }
 
-        if(inputChar != '\0'){
+        if((inputChar != '\0') && userCounter < 4){
             userInput[userCounter] = inputChar;
             userCounter++;
             considerSpace = true;
@@ -265,11 +276,11 @@ char MorseToChar(char morse[], char morseAlphabet[][4]) {
     for (int i = 0; i < 26; i++) {
         if ((morseAlphabet[i][0] == morse[0]) && (morseAlphabet[i][1] == morse[1]) && (morseAlphabet[i][2] == morse[2]) && (morseAlphabet[i][3] == morse[3])) {
             return i + 65;
-            SerialPuts("Match found\r\n");
+            //SerialPuts("Match found\r\n");
         }
     }
 
-    SerialPuts("Invalid\r\n");
+    //SerialPuts("Invalid\r\n");
     return '\0';
 }
 
