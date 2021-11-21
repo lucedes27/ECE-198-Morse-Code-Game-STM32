@@ -106,7 +106,6 @@ int main(void)
 
   uint32_t time2 = (INT_MIN/2) - 1;
 
-    // Should we consider converting input to ASCII?
     bool considerSpace = false;
 
     char userInput[4] = {'\0', '\0', '\0', '\0'};
@@ -239,7 +238,7 @@ int main(void)
             timeSincePressed = HAL_GetTick() - time2;
 
             if(considerSpace && (timeSincePressed > 1400)){
-                
+                //SerialPuts("Space\r\n");
                 considerSpace = false;
 
                 if(MorseToChar(userInput, morseAlphabet) != '\0'){
@@ -295,11 +294,12 @@ int main(void)
         time2 = HAL_GetTick();
         uint32_t timePressed = time2 - time1; // Calculating time button is held for
 
-        if(timePressed < 200){ // Checking for dot
+        if(timePressed < 200){
+            
             inputChar = '.';
-        } else if(timePressed < 3000){ // Checking for dash
+        } else if(timePressed < 3000){
             inputChar = '-';
-        } else if(cityIndex != 0){ // Checking for backspace
+        } else if(cityIndex != 0){
             inputChar = '\0';
             
             cityIndex--;
@@ -515,7 +515,7 @@ void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]){
 }
 */
 
-bool isEqual(char str1[], char str2[]) { // Check if two arrays of characters are equivalent
+bool isEqual(char str1[], char str2[]) {
     int i = 0;
 
     while (str1[i] != '\0') {
