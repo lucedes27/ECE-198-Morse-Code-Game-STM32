@@ -241,8 +241,6 @@ char MorseToChar(char morse[], char morseAlphabet[][4]) {
 
 void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]){
 	size_t letterIndex = 0;
-    uint32_t initialTime = 0;
-    uint32_t finalTime = 0;
     for(size_t i = 0; i < capacity; i++){
         letterIndex = morse[i] - 65;
         for(size_t j = 0; j < 4; j++){
