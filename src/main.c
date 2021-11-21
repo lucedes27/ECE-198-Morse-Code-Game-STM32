@@ -53,6 +53,7 @@ int main(void)
 
     uint32_t time2 = (INT_MIN/2) - 1;
 
+    // Should we consider converting input to ASCII?
     bool considerSpace = false;
 
     char userInput[4] = {'\0', '\0', '\0', '\0'};
@@ -148,9 +149,6 @@ int main(void)
 
     };
 
-    char SOS[3] = {'S', 'O', 'S'};
-
-
     while (true) {
 
         int timeSincePressed = 0;
@@ -162,7 +160,7 @@ int main(void)
             timeSincePressed = HAL_GetTick() - time2;
 
             if(considerSpace && (timeSincePressed > 1400)){
-                //SerialPuts("Space\r\n");
+                
                 considerSpace = false;
 
                 if(MorseToChar(userInput, morseAlphabet) != '\0'){
@@ -218,12 +216,11 @@ int main(void)
         time2 = HAL_GetTick();
         uint32_t timePressed = time2 - time1; // Calculating time button is held for
 
-        if(timePressed < 200){
-            
+        if(timePressed < 200){ // Checking for dot
             inputChar = '.';
-        } else if(timePressed < 3000){
+        } else if(timePressed < 3000){ // Checking for dash
             inputChar = '-';
-        } else if(cityIndex != 0){
+        } else if(cityIndex != 0){ // Checking for backspace
             inputChar = '\0';
             
             cityIndex--;
@@ -248,17 +245,6 @@ int main(void)
             SerialPuts(buff);
         }
 
-        // Outputing press time
-        //sprintf(buff, "Time Pressed: %lu ms\r\n", timePressed);
-        //SerialPuts(buff);
-        //Outputting inputChar
-        //sprintf(buff, "Input character: %c \r\n\n", inputChar);
-        //SerialPuts(buff);
-
-
-
-        //Checking for dot vs dash
-
     }
 
     return 0;
@@ -271,7 +257,7 @@ void SysTick_Handler(void)
     // we can do other things in here too if we need to, but be careful
 }
 
-char MorseToChar(char morse[], char morseAlphabet[][4]) {
+char MorseToChar(char morse[], char morseAlphabet[][4]) { // Convert Morse input to ASCII character
 
     for (int i = 0; i < 26; i++) {
         if ((morseAlphabet[i][0] == morse[0]) && (morseAlphabet[i][1] == morse[1]) && (morseAlphabet[i][2] == morse[2]) && (morseAlphabet[i][3] == morse[3])) {
@@ -311,7 +297,7 @@ void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]){
 }
 */
 
-bool isEqual(char str1[], char str2[]) {
+bool isEqual(char str1[], char str2[]) { // Check if two arrays of characters are equivalent
     int i = 0;
 
     while (str1[i] != '\0') {
