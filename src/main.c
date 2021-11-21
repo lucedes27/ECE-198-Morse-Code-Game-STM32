@@ -59,10 +59,11 @@ int main(void)
     char inputChar = ' ';
     int userCounter = 0;
 
-    char cityInput[85];
+    char cityInput[85] = {'\0'};
     size_t cityIndex = 0;
 
     char BERLIN[7] = {'B', 'E', 'R', 'L', 'I', 'N', '\0'};
+    char E[2] = {'E', '\0'};
 
     char buff[100];
   
@@ -149,6 +150,7 @@ int main(void)
 
     char SOS[3] = {'S', 'O', 'S'};
 
+
     while (true) {
 
         int timeSincePressed = 0;
@@ -160,19 +162,32 @@ int main(void)
             timeSincePressed = HAL_GetTick() - time2;
 
             if(considerSpace && (timeSincePressed > 1400)){
-                SerialPuts("Space\r\n");
+                //SerialPuts("Space\r\n");
                 considerSpace = false;
 
                 if(MorseToChar(userInput, morseAlphabet) != '\0'){
                 
-                    sprintf(buff, "Letter: %c\r\n", MorseToChar(userInput, morseAlphabet));
-                    SerialPuts(buff);
+                    //sprintf(buff, "Letter: %c", MorseToChar(userInput, morseAlphabet));
+
+                    //sprintf(buff, "%c", MorseToChar(userInput, morseAlphabet));
+                    //SerialPuts(buff);
 
                     cityInput[cityIndex] = MorseToChar(userInput, morseAlphabet);
                     cityIndex++;
 
-                    if (isEqual(cityInput, BERLIN)) {
-                        SerialPuts("You saved Europe!");
+                    SerialPuts("\r\n");
+                    for(size_t i = 0; i < cityIndex; i++){
+                        
+                        if(cityInput[i] != '\0'){
+                            sprintf(buff, "%c", cityInput[i]);
+                            SerialPuts(buff);
+                        }
+                    }
+
+                    
+                    if ( isEqual(cityInput, BERLIN) ) {
+                        sprintf(buff, "\r\nYou saved Europe!");
+                        SerialPuts(buff);
                     }
 
                 }
@@ -184,7 +199,6 @@ int main(void)
             }
 
         } // Waiting for button press
-
         
         uint32_t time1 = HAL_GetTick(); 
 
@@ -194,21 +208,41 @@ int main(void)
         uint32_t timePressed = time2 - time1; // Calculating time button is held for
 
         if(timePressed < 200){
+            
             inputChar = '.';
-        } else{
+        } else if(timePressed < 3000){
             inputChar = '-';
+        } else if(cityIndex != 0){
+            inputChar = '\0';
+            
+            cityIndex--;
+            cityInput[cityIndex] = '\0';
+            
+            for(size_t i = 0; i < cityIndex; i++){
+
+                if(cityInput[i] != '\0'){
+                    sprintf(buff, "%c", cityInput[i]);
+                    SerialPuts(buff);
+                }
+
+            }
         }
 
-        userInput[userCounter] = inputChar;
-        userCounter++;
-        considerSpace = true;
+        if(inputChar != '\0'){
+            userInput[userCounter] = inputChar;
+            userCounter++;
+            considerSpace = true;
+
+            sprintf(buff, "%c", inputChar);
+            SerialPuts(buff);
+        }
 
         // Outputing press time
-        sprintf(buff, "Time Pressed: %lu ms\r\n", timePressed);
-        SerialPuts(buff);
+        //sprintf(buff, "Time Pressed: %lu ms\r\n", timePressed);
+        //SerialPuts(buff);
         //Outputting inputChar
-        sprintf(buff, "Input character: %c \r\n\n", inputChar);
-        SerialPuts(buff);        
+        //sprintf(buff, "Input character: %c \r\n\n", inputChar);
+        //SerialPuts(buff);
 
 
 
@@ -239,6 +273,7 @@ char MorseToChar(char morse[], char morseAlphabet[][4]) {
     return '\0';
 }
 
+/*
 void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]){
 	size_t letterIndex = 0;
     for(size_t i = 0; i < capacity; i++){
@@ -263,14 +298,18 @@ void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]){
     HAL_Delay(5000);
 
 }
+*/
 
 bool isEqual(char str1[], char str2[]) {
     int i = 0;
+
     while (str1[i] != '\0') {
+        
         if (str1[i] != str2[i]) {
-            return 0;
+            return false;
         }
         i++;
     }
+
     return str2[i] == '\0';
 }
