@@ -55,7 +55,9 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 bool isEqual(char str1[], char str2[]);
+void reset(char *str[]);
 char MorseToChar(char morse[], char morseAlphabet[][4]);
+// void lcdOutput(char str1[], char str2[]);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

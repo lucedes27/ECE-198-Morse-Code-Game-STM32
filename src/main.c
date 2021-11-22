@@ -115,7 +115,13 @@ int main(void)
     char cityInput[85] = {'\0'};
     size_t cityIndex = 0;
 
-    char BERLIN[7] = {'B', 'E', 'R', 'L', 'I', 'N', '\0'};
+  
+    char countries[13][16] = {"GERMANY", "UNITED KINGDOM", "SPAIN", "ITALY", "UKRAINE", "BELGIUM", "FRANCE", "POLAND", "CZECHOSLOVAKIA", "NETHERLANDS", "AUSTRIA", "YUGOSLAVIA", "NORWAY"};
+    char cities[13][16] = {"BERLIN", "LONDON", "MADRID", "ROME", "KIEV", "BRUSSELS", "PARIS", "WARSAW", "PRAGUE", "AMSTERDAM", "VIENNA", "BELGRADE", "OSLO"};
+  
+  	
+    
+  
     char E[2] = {'E', '\0'};
 
     char buff[100];
@@ -224,6 +230,17 @@ int main(void)
   */
   /* USER CODE END 2 */
 
+  while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));
+
+  srand(HAL_GetTick());
+  int guessIndex = rand() % 13;
+  int round = 1;
+  int previous[2] = {13,13};
+
+  lcd16x2_i2c_printf(countries[guessIndex]);
+
+  while (!(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)));
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -242,38 +259,68 @@ int main(void)
                 considerSpace = false;
 
                 if(MorseToChar(userInput, morseAlphabet) != '\0'){
-                
-                    //sprintf(buff, "Letter: %c", MorseToChar(userInput, morseAlphabet));
-
-                    //sprintf(buff, "%c", MorseToChar(userInput, morseAlphabet));
-                    //SerialPuts(buff);
 
                     cityInput[cityIndex] = MorseToChar(userInput, morseAlphabet);
                     cityIndex++;
 
                     lcd16x2_i2c_clear();
+                    lcd16x2_i2c_setCursor(0,0);
+                    lcd16x2_i2c_printf(countries[guessIndex]);
+                    lcd16x2_i2c_setCursor(1,0);
                     lcd16x2_i2c_printf(cityInput);
                     for(size_t i = 0; i < cityIndex; i++){
                         
                         if(cityInput[i] != '\0'){
                           lcd16x2_i2c_clear();
-                            lcd16x2_i2c_printf(cityInput);
+                          lcd16x2_i2c_setCursor(0,0);
+                          lcd16x2_i2c_printf(countries[guessIndex]);
+                          lcd16x2_i2c_setCursor(1,0);
+                          lcd16x2_i2c_printf(cityInput);
                         }
                     }
 
                     
-                    if ( isEqual(cityInput, BERLIN) ) {
-                      lcd16x2_i2c_clear();
-                        lcd16x2_i2c_printf("You Win");
+                    if (isEqual(cityInput, cities[guessIndex])) {
+                      if (round == 3) {
+                        lcd16x2_i2c_clear();
+                        lcd16x2_i2c_setCursor(0,0);
+                        lcd16x2_i2c_printf("Congratulations");
+                        lcd16x2_i2c_setCursor(1,0);
+                        lcd16x2_i2c_printf("You Win!");
+                      } else {
+                        lcd16x2_i2c_clear();
+                        lcd16x2_i2c_setCursor(0,0);
+                        lcd16x2_i2c_printf("Successful");
+                        lcd16x2_i2c_setCursor(1,0);
+                        lcd16x2_i2c_printf("Transmission");
+                        HAL_Delay(3000);
+                        reset(cityInput);
+                        reset(userInput);
+                        cityIndex = 0;
+                        previous[round-1] = guessIndex;
+                        while ((guessIndex == previous[0]) || (guessIndex == previous[1])) {
+                          guessIndex = rand() % 13;
+                        }
+                        round++;
+                        lcd16x2_i2c_clear();
+                        lcd16x2_i2c_setCursor(0,0);
+                        lcd16x2_i2c_printf(countries[guessIndex]);
+                      }
                     }
 
                 } else{
                   lcd16x2_i2c_clear();
-                    lcd16x2_i2c_printf(cityInput);
+                  lcd16x2_i2c_setCursor(0,0);
+                  lcd16x2_i2c_printf(countries[guessIndex]);
+                  lcd16x2_i2c_setCursor(1,0);
+                  lcd16x2_i2c_printf(cityInput);
                     for(size_t i = 0; i < cityIndex; i++){
                         if(cityInput[i] != '\0'){
                           lcd16x2_i2c_clear();
-                            lcd16x2_i2c_printf(cityInput);
+                          lcd16x2_i2c_setCursor(0,0);
+                          lcd16x2_i2c_printf(countries[guessIndex]);
+                          lcd16x2_i2c_setCursor(1,0);
+                          lcd16x2_i2c_printf(cityInput);
                         }
 
                     }
@@ -305,23 +352,17 @@ int main(void)
             cityIndex--;
             cityInput[cityIndex] = '\0';
 
-            for(size_t i = 0; i < cityIndex; i++){
-
-                if(cityInput[i] != '\0'){
-                  lcd16x2_i2c_clear();
-                    lcd16x2_i2c_printf(cityInput);
-                }
-
-            }
+            lcd16x2_i2c_clear();
+            lcd16x2_i2c_setCursor(0,0);
+            lcd16x2_i2c_printf(countries[guessIndex]);
+            lcd16x2_i2c_setCursor(1,0);
+            lcd16x2_i2c_printf(cityInput);
         }
 
         if((inputChar != '\0') && userCounter < 4){
             userInput[userCounter] = inputChar;
             userCounter++;
             considerSpace = true;
-
-            lcd16x2_i2c_clear();
-            lcd16x2_i2c_printf(inputChar);
         }
 
     /* USER CODE BEGIN 3 */
@@ -527,6 +568,14 @@ bool isEqual(char str1[], char str2[]) {
     }
 
     return str2[i] == '\0';
+}
+
+void reset(char *str[]) {
+  int i = 0;
+  while (str[i] != '\0') {
+    str[i] = '\0';
+    i++;
+  }
 }
 
 /* USER CODE END 4 */
