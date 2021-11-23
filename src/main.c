@@ -257,17 +257,6 @@ int main(void)
                     lcd16x2_i2c_printf(countries[guessIndex]);
                     lcd16x2_i2c_setCursor(1,0);
                     lcd16x2_i2c_printf(cityInput);
-                    for(size_t i = 0; i < cityIndex; i++){
-                        
-                        if(cityInput[i] != '\0'){
-                          lcd16x2_i2c_clear();
-                          lcd16x2_i2c_setCursor(0,0);
-                          lcd16x2_i2c_printf(countries[guessIndex]);
-                          lcd16x2_i2c_setCursor(1,0);
-                          lcd16x2_i2c_printf(cityInput);
-                        }
-                    }
-
                     
                     if (isEqual(cityInput, cities[guessIndex])) {
                       if (round == 3) {
@@ -303,16 +292,7 @@ int main(void)
                   lcd16x2_i2c_printf(countries[guessIndex]);
                   lcd16x2_i2c_setCursor(1,0);
                   lcd16x2_i2c_printf(cityInput);
-                    for(size_t i = 0; i < cityIndex; i++){
-                        if(cityInput[i] != '\0'){
-                          lcd16x2_i2c_clear();
-                          lcd16x2_i2c_setCursor(0,0);
-                          lcd16x2_i2c_printf(countries[guessIndex]);
-                          lcd16x2_i2c_setCursor(1,0);
-                          lcd16x2_i2c_printf(cityInput);
-                        }
-
-                    }
+                    
                 }
 
                 for (int i = 0; i < 4; i++) {
