@@ -253,22 +253,3 @@ void lcd16x2_i2c_printf(const char* str, ...)
     lcd16x2_i2c_sendData((uint8_t)stringArray[i]);
   }
 }
-
-void lcd16x2_i2c_display(bool state);
-
-/**
- * @brief Shift content to right
- */
-void lcd16x2_i2c_shiftRight(uint8_t offset);
-
-/**
- * @brief Shift content to left
- */
-void lcd16x2_i2c_shiftLeft(uint8_t offset);
-
-/**
- * @brief Print to display
- */
-void lcd16x2_i2c_printf(const char* str, ...);
-
-

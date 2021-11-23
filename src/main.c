@@ -104,28 +104,30 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
+
   uint32_t time2 = (INT_MIN/2) - 1;
 
+    // Should we consider adding a space? Not at beginning, so we initialize to false
     bool considerSpace = false;
 
+    // Array of characters to keep track of user input before translating to ASCII character
     char userInput[4] = {'\0', '\0', '\0', '\0'};
     char inputChar = ' ';
     int userCounter = 0;
 
+    // Array to keep track of ASCII characters and check against correct answers
     char cityInput[85] = {'\0'};
     size_t cityIndex = 0;
 
   
+    // Array of countries and corresponding cities of interest during WW2
     char countries[13][16] = {"GERMANY", "UNITED KINGDOM", "SPAIN", "ITALY", "UKRAINE", "BELGIUM", "FRANCE", "POLAND", "CZECHOSLOVAKIA", "NETHERLANDS", "AUSTRIA", "YUGOSLAVIA", "NORWAY"};
     char cities[13][16] = {"BERLIN", "LONDON", "MADRID", "ROME", "KIEV", "BRUSSELS", "PARIS", "WARSAW", "PRAGUE", "AMSTERDAM", "VIENNA", "BELGRADE", "OSLO"};
-  
-  	
-    
-  
-    char E[2] = {'E', '\0'};
 
+    // Placeholder string to faciliate console output
     char buff[100];
   
+    // Morse alphabet dictionary
     char morseAlphabet[26][4] = {
         //A
         {'.', '-'},
@@ -215,20 +217,9 @@ int main(void)
   lcd16x2_i2c_setCursor(0,0);
   lcd16x2_i2c_clear();
 
-/*
-  char buffer[2] = {'\0','\0'};
-  char test[100] = "Hello";
-  int i = 0;
-
-  while (test[i] != '\0') {
-	  while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));
-	  buffer[0] = test[i];
-	  lcd16x2_i2c_printf(buffer);
-	  while (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));
-	  i++;
-  }
-  */
   /* USER CODE END 2 */
+
+  // INITIALIZATION AND CHOOSING RANDOM COUNTRIES TO ASK USER
 
   while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));
 
@@ -249,13 +240,11 @@ int main(void)
     int timeSincePressed = 0;
 
         while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)){
-          
-          	//outputMorse(SOS, 3, morseAlphabet);
 
             timeSincePressed = HAL_GetTick() - time2;
 
             if(considerSpace && (timeSincePressed > 1400)){
-                //SerialPuts("Space\r\n");
+
                 considerSpace = false;
 
                 if(MorseToChar(userInput, morseAlphabet) != '\0'){
@@ -284,9 +273,9 @@ int main(void)
                       if (round == 3) {
                         lcd16x2_i2c_clear();
                         lcd16x2_i2c_setCursor(0,0);
-                        lcd16x2_i2c_printf("Congratulations");
+                        lcd16x2_i2c_printf("Good job");
                         lcd16x2_i2c_setCursor(1,0);
-                        lcd16x2_i2c_printf("You Win!");
+                        lcd16x2_i2c_printf("Europe is safe!");
                       } else {
                         lcd16x2_i2c_clear();
                         lcd16x2_i2c_setCursor(0,0);
@@ -528,33 +517,6 @@ char MorseToChar(char morse[], char morseAlphabet[][4]) { // Convert Morse input
     //SerialPuts("Invalid\r\n");
     return '\0';
 }
-
-/*
-void outputMorse(char morse[], size_t capacity, char morseAlphabet[][4]){
-	size_t letterIndex = 0;
-    for(size_t i = 0; i < capacity; i++){
-        letterIndex = morse[i] - 65;
-        for(size_t j = 0; j < 4; j++){
-            if(morseAlphabet[letterIndex][j] != '\0'){
-                if(morseAlphabet[letterIndex][j] == '.') {
-                    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-                    delayedToggle(200, GPIOA, GPIO_PIN_5);
-                    HAL_Delay(1400);
-                }
-                if(morseAlphabet[letterIndex][j] == '-'){
-                    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-                    delayedToggle(600, GPIOA, GPIO_PIN_5);
-                    HAL_Delay(1400);
-                }  
-            }
-
-        }
-    }
-
-    HAL_Delay(5000);
-
-}
-*/
 
 bool isEqual(char str1[], char str2[]) {
     int i = 0;
