@@ -3,6 +3,7 @@
   ******************************************************************************
   * @file           : main.c
   * @brief          : Main program body
+  * @authors        : Thomas Hart and Luc Edes
   ******************************************************************************
   * @attention
   *
@@ -17,84 +18,49 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
+
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-/* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <limits.h>
 
 #include "ece198.h"
 #include "lcd16x2_i2c.h"
 /* USER CODE END Includes */
 
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
-
 UART_HandleTypeDef huart2;
-
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_USART2_UART_Init(void);
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
   * @retval int
   */
+
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
-
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
-  /* USER CODE BEGIN Init */
-  
-  /* USER CODE END Init */
-
   /* Configure the system clock */
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  __HAL_RCC_GPIOA_CLK_ENABLE(); // enable port A (for the on-board LED, for example)
-  __HAL_RCC_GPIOB_CLK_ENABLE(); // enable port B (for the rotary encoder inputs, for example)
-  __HAL_RCC_GPIOC_CLK_ENABLE(); // enable port C (for the on-board blue pushbutton, for example)
+  __HAL_RCC_GPIOA_CLK_ENABLE(); // enable port A
+  __HAL_RCC_GPIOB_CLK_ENABLE(); // enable port B
+  __HAL_RCC_GPIOC_CLK_ENABLE(); // enable port C
   InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);
   /* USER CODE END SysInit */
 
@@ -102,9 +68,8 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_USART2_UART_Init();
+
   /* USER CODE BEGIN 2 */
-
-
   uint32_t time2 = (INT_MIN/2) - 1;
 
     // Should we consider adding a space? Not at beginning, so we initialize to false
@@ -118,17 +83,13 @@ int main(void)
     // Array to keep track of ASCII characters and check against correct answers
     char cityInput[85] = {'\0'};
     size_t cityIndex = 0;
-
   
     // Array of countries and corresponding cities of interest during WW2
-    char countries[13][16] = {"GERMANY", "UNITED KINGDOM", "SPAIN", "ITALY", "UKRAINE", "BELGIUM", "FRANCE", "POLAND", "CZECHOSLOVAKIA", "NETHERLANDS", "AUSTRIA", "YUGOSLAVIA", "NORWAY"};
-    char cities[13][16] = {"BERLIN", "LONDON", "MADRID", "ROME", "KIEV", "BRUSSELS", "PARIS", "WARSAW", "PRAGUE", "AMSTERDAM", "VIENNA", "BELGRADE", "OSLO"};
-
-    // Placeholder string to faciliate console output
-    char buff[100];
+    char const COUNTRIES[13][16] = {"GERMANY", "UNITED KINGDOM", "SPAIN", "ITALY", "UKRAINE", "BELGIUM", "FRANCE", "POLAND", "CZECHOSLOVAKIA", "NETHERLANDS", "AUSTRIA", "YUGOSLAVIA", "NORWAY"};
+    char const CITIES[13][16] = {"BERLIN", "LONDON", "MADRID", "ROME", "KIEV", "BRUSSELS", "PARIS", "WARSAW", "PRAGUE", "AMSTERDAM", "VIENNA", "BELGRADE", "OSLO"};
   
     // Morse alphabet dictionary
-    char morseAlphabet[26][4] = {
+    char const MORSE_ALPHABET[26][4] = {
         //A
         {'.', '-'},
 
@@ -213,14 +174,13 @@ int main(void)
 
   if(lcd16x2_i2c_init(&hi2c1)) {
 	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+    HAL_Delay(500);
+    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
   }
   lcd16x2_i2c_setCursor(0,0);
   lcd16x2_i2c_clear();
 
-  /* USER CODE END 2 */
-
   // INITIALIZATION AND CHOOSING RANDOM COUNTRIES TO ASK USER
-
   while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));
 
   srand(HAL_GetTick());
@@ -228,9 +188,10 @@ int main(void)
   int round = 1;
   int previous[2] = {13,13};
 
-  lcd16x2_i2c_printf(countries[guessIndex]);
+  lcd16x2_i2c_printf(COUNTRIES[guessIndex]);
 
   while (!(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)));
+  /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -247,18 +208,18 @@ int main(void)
 
                 considerSpace = false;
 
-                if(MorseToChar(userInput, morseAlphabet) != '\0'){
+                if(MorseToChar(userInput, MORSE_ALPHABET) != '\0'){
 
-                    cityInput[cityIndex] = MorseToChar(userInput, morseAlphabet);
+                    cityInput[cityIndex] = MorseToChar(userInput, MORSE_ALPHABET);
                     cityIndex++;
 
                     lcd16x2_i2c_clear();
                     lcd16x2_i2c_setCursor(0,0);
-                    lcd16x2_i2c_printf(countries[guessIndex]);
+                    lcd16x2_i2c_printf(COUNTRIES[guessIndex]);
                     lcd16x2_i2c_setCursor(1,0);
                     lcd16x2_i2c_printf(cityInput);
                     
-                    if (isEqual(cityInput, cities[guessIndex])) {
+                    if (isEqual(cityInput, CITIES[guessIndex])) {
                       if (round == 3) {
                         lcd16x2_i2c_clear();
                         lcd16x2_i2c_setCursor(0,0);
@@ -282,14 +243,14 @@ int main(void)
                         round++;
                         lcd16x2_i2c_clear();
                         lcd16x2_i2c_setCursor(0,0);
-                        lcd16x2_i2c_printf(countries[guessIndex]);
+                        lcd16x2_i2c_printf(COUNTRIES[guessIndex]);
                       }
                     }
 
                 } else{
                   lcd16x2_i2c_clear();
                   lcd16x2_i2c_setCursor(0,0);
-                  lcd16x2_i2c_printf(countries[guessIndex]);
+                  lcd16x2_i2c_printf(COUNTRIES[guessIndex]);
                   lcd16x2_i2c_setCursor(1,0);
                   lcd16x2_i2c_printf(cityInput);
                     
@@ -323,7 +284,7 @@ int main(void)
 
             lcd16x2_i2c_clear();
             lcd16x2_i2c_setCursor(0,0);
-            lcd16x2_i2c_printf(countries[guessIndex]);
+            lcd16x2_i2c_printf(COUNTRIES[guessIndex]);
             lcd16x2_i2c_setCursor(1,0);
             lcd16x2_i2c_printf(cityInput);
         }
@@ -490,11 +451,8 @@ char MorseToChar(char morse[], char morseAlphabet[][4]) { // Convert Morse input
     for (int i = 0; i < 26; i++) {
         if ((morseAlphabet[i][0] == morse[0]) && (morseAlphabet[i][1] == morse[1]) && (morseAlphabet[i][2] == morse[2]) && (morseAlphabet[i][3] == morse[3])) {
             return i + 65;
-            //SerialPuts("Match found\r\n");
         }
     }
-
-    //SerialPuts("Invalid\r\n");
     return '\0';
 }
 
